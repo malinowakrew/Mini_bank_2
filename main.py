@@ -32,8 +32,8 @@ def print_hi(name):
     sesja = Session()
     #sesja.show()
     #result = db.wallets.insert_one({"currency": "złoty", "founds": 17})
-    #sesja.createAccount("EdytaM", "123", "Adaś", "Lubaniecki", "złoty")
-    A = sesja.logIn("EdytaM", "123")
+    #sesja.createAccount("EdytaMroz", "123", "Adaś", "Lubaniecki", "złoty")
+    A = sesja.logIn("EdytaMroz", "123")
     for wallet in A.wallets:
         print(wallet.getFounds())
     #print(lambda wall: )
@@ -48,8 +48,14 @@ def print_hi(name):
 
     A.addMoney(78)
     for c in lista_c:
-        if c.name == "dolar":
+        if c.name == "frank":
+            A.addWallet(c)
             A.transfer(7, c)
+    print("Przed")
+    A.show()
+
+    print("Po")
+    A.pay(2, "frank")
     A.show()
     """
     print("main")

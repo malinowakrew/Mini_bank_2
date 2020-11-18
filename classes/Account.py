@@ -84,6 +84,13 @@ class Account(TransactionInterface, FinancialInterface):
     def checkMainWallet(self):
         pass
 
+    def pay(self, foundsToPay, currency):
+        for wallet in self.wallets:
+            if wallet.currency == currency:
+                wallet.pay(foundsToPay)
+
+        self.wallets = self.walletsInit()
+
 def test():
     ac = Account("98")
     ac.walletsInit()
