@@ -3,5 +3,5 @@ from abc import ABC, abstractmethod
 
 class CreateAccountInterface(ABC):
     @abstractmethod
-    def createAccount(self, password, name, surname, currency):
+    def createAccountInterface(self):
         pass

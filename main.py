@@ -29,10 +29,32 @@ def print_hi(name):
                                        "date": datetime.now()})
 
     """
-    sesja = Session()
-    #sesja.show()
-    #result = db.wallets.insert_one({"currency": "złoty", "founds": 17})
-    #sesja.createAccount("EdytaMroz", "123", "Adaś", "Lubaniecki", "złoty")
+    session = Session()
+    run = True
+    while(run):
+        print("Menu\n"
+              "1. Show currencies\n"
+              "2. Log in\n"
+              "3. Create account\n"
+              "4. Stop\n")
+        choose = int(input("Type numer from menu: "))
+
+        if(choose == 4):
+            run = False
+        elif (choose == 3):
+            session.createAccountInterface()
+        elif (choose == 2):
+
+            # sesja.show()
+            # result = db.wallets.insert_one({"currency": "złoty", "founds": 17})
+            # sesja.createAccountInterface()
+            A = session.logInInterface()
+            A.addMoneyInterface()
+        elif (choose == 1):
+            pass
+        else:
+            print("Try to choose one more time")
+    """
     A = sesja.logIn("EdytaMroz", "123")
     for wallet in A.wallets:
         print(wallet.getFounds())
@@ -57,7 +79,7 @@ def print_hi(name):
     print("Po")
     A.pay(2, "frank")
     A.show()
-    """
+    
     print("main")
     print(A.mainWallet.getFounds())
     A.addMoney(89.0)

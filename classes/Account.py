@@ -58,6 +58,7 @@ class Account(TransactionInterface, FinancialInterface):
 
     def addMoney(self, money):
         walletDB = db.wallets.update({'_id': self.mainWallet.walletID}, {"$inc": {"founds": money}})
+        #self.mainWallet.changeFounds(money)
         self.wallets = self.walletsInit()
 
 
@@ -91,9 +92,19 @@ class Account(TransactionInterface, FinancialInterface):
 
         self.wallets = self.walletsInit()
 
-def test():
-    ac = Account("98")
-    ac.walletsInit()
+    #Interfaces
 
-if __name__ == "__main__":
-    test()
+    def addMoneyInterface(self):
+        print("Adding money")
+        money = input("Money to add: ")
+
+        try:
+            self.addMoney(int(money))
+            print("Added")
+            self.show()
+        except Exception as error:
+            print(error)
+
+
+
+

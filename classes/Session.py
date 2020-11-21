@@ -40,11 +40,18 @@ class Session(LogInterface, CreateAccountInterface, FinancialInterface):
 
     def show(self):
         for currency in self.currencies:
-            print(currency.getCurrency())
+            print(currency.getCurrency()["name"])
+
+    def displayCurrencies(self):
+        list = []
+        for currency in self.currencies:
+            list.append(currency.getCurrency()["name"])
+        return list
 
     def createAccount(self, nick, password, name, surname, currency):
         checkUser = db.accounts.find_one({"nick": nick})
         if checkUser == None:
+
             resultUser = db.users.insert_one({"name": name,
                                               "surname": surname,
                                               })
@@ -87,7 +94,6 @@ class Session(LogInterface, CreateAccountInterface, FinancialInterface):
         accountDB = db.accounts.find_one({"nick": nick})
 
         if accountDB['password'] == password:
-            #usersDB = db.users.find_one({"_id": (accountDB["user"])["_id"]})
             return Account(accountDB['_id'])
         else:
             raise LogError
@@ -99,3 +105,36 @@ class Session(LogInterface, CreateAccountInterface, FinancialInterface):
     def findCurrency(self):
         pass
 
+    #Interfaces
+    def createAccountInterface(self):
+        print(f"Creating account")
+        nick = input("Nick: ")
+        password = input("Password: ")
+        name = input("Name: ")
+        surname = input("Surname: ")
+        print("Currency: ")
+
+        for number, currency in enumerate(self.displayCurrencies()):
+            print(f"{number+1}. {currency}")
+
+        currencyChoose = input("Type number of choosed currency: ")
+        currency = self.displayCurrencies()
+        type(currency)
+        currency = currency[int(currencyChoose)-1]
+
+        try:
+            self.createAccount(nick, password, name, surname, currency)
+        except Exception as error:
+            print(error)
+
+    def logInInterface(self):
+        print("Sign in")
+        nick = input("Nick: ")
+        password = input("Password: ")
+
+        try:
+            Account = self.logIn(nick, password)
+            print(f"Welcom {Account.user.name}")
+            return Account
+        except Exception as error:
+            print(error)

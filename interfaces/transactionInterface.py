@@ -15,5 +15,5 @@ class TransactionInterface(ABC):
         pass
 
     @abstractmethod
-    def addMoney(self):
+    def addMoneyInterface(self):
         pass
