@@ -3,6 +3,7 @@ import pymongo
 
 from interfaces.transactionInterface import *
 from interfaces.financialInterface import *
+from interfaces.showInterface import *
 
 from db import db
 from classes.Wallet import Wallet
@@ -10,7 +11,7 @@ from classes.User import User
 
 from bson.objectid import ObjectId
 
-class Account(TransactionInterface, FinancialInterface):
+class Account(TransactionInterface, FinancialInterface, ShowInterface):
     def __init__(self, ID) -> None:
         self.accountID = ObjectId(ID)
         self.wallets = self.walletsInit()
@@ -51,20 +52,12 @@ class Account(TransactionInterface, FinancialInterface):
     def deposit(self):
         pass
 
-    def show(self):
-        print("Masz na koncie:")
+
+    def displayWallets(self):
+        list = []
         for wallet in self.wallets:
-            print(f"{wallet.currency}: {wallet.funds}")
-
-    def addMoney(self, money):
-        walletDB = db.wallets.update({'_id': self.mainWallet.walletID}, {"$inc": {"founds": money}})
-        #self.mainWallet.changeFounds(money)
-        self.wallets = self.walletsInit()
-
-
-
-    def display_History(self):
-        pass
+            list.append([wallet.currency, wallet.funds])
+        return list
 
     def addWallet(self, currency):
         result = db.wallets.insert_one({'currency': {"id": currency.currencyID,
@@ -79,31 +72,64 @@ class Account(TransactionInterface, FinancialInterface):
     def createWallets(self):
         pass
 
-    def displayWallets(self):
-        pass
 
     def checkMainWallet(self):
         pass
 
-    def pay(self, foundsToPay, currency):
-        for wallet in self.wallets:
-            if wallet.currency == currency:
-                wallet.pay(foundsToPay)
-
-        self.wallets = self.walletsInit()
 
     #Interfaces
 
     def addMoneyInterface(self):
         print("Adding money")
-        money = input("Money to add: ")
+        money = int(input("Money to add: "))
 
         try:
-            self.addMoney(int(money))
+            self.mainWallet.changeFounds(money)
+            self.wallets = self.walletsInit()
             print("Added")
-            self.show()
+            self.showInterface()
         except Exception as error:
             print(error)
+
+
+
+    def payInterface(self):
+        print("Pay for what you want")
+        currencyToChoose = self.displayWallets()
+
+        self.showInterface()
+
+        Choose = input("Number of currency: ")
+        try:
+            currencyToPay: list = currencyToChoose[int(Choose)-1][0]
+        except Exception as error:
+            print(error)
+
+        foundsToPay = int(input("Money: "))
+        for wallet in self.wallets:
+            if wallet.currency == currencyToPay:
+                try:
+                    result = wallet.pay(foundsToPay)
+                except Exception as error:
+                    print(error)
+
+        self.wallets = self.walletsInit()
+
+        self.showInterface()
+
+    def transferInterface(self):
+        pass
+
+    def showInterface(self):
+        print("Masz na koncie:")
+        wallets = self.displayWallets()
+
+        for number, wallet in enumerate(wallets):
+            print(f"{number+1}. {wallet[0]}: {wallet[1]}")
+
+    def BalanceInterface(self):
+        pass
+
 
 
 

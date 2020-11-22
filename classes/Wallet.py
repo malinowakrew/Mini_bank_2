@@ -23,17 +23,16 @@ class Wallet():
     def changeFounds(self, founds):
         walletData = db.wallets.find_one({"currency": str(self.currency)})
         id = walletData['_id']
-        results = db.wallets.update_one({'_id': id}, {"$set": {'founds': str(founds)}})
+        results = db.wallets.update({'_id': self.walletID}, {"$inc": {'founds': founds}})
 
         return walletData
 
     def pay(self, foundsToPay):
         walletData = db.wallets.find_one({"_id": self.walletID})
         walletFounds = walletData['founds']
-        if(float(walletFounds) < foundsToPay):
+        if float(walletFounds) < foundsToPay:
             raise NotEnoughFounds
         else:
             results = db.wallets.update({'_id': self.walletID}, {"$inc": {'founds': -foundsToPay}})
-
-        return results
+            return results
 

@@ -7,7 +7,27 @@ from classes.Account import *
 from classes.Session import *
 from datetime import datetime
 
-def print_hi(name):
+def user(account: Account) -> None:
+    run = True
+    while run:
+        print("Menu\n"
+              "1. Show currencies\n"
+              "2. Account balance\n"
+              "3. Pay\n"
+              "4. Add money\n"
+              "5. Log out\n")
+        choose = int(input("Type numer from menu: "))
+
+        if choose == 5:
+            run = False
+        elif choose == 4:
+            account.addMoneyInterface()
+        elif choose == 2:
+            pass
+        elif choose == 3:
+            account.payInterface()
+
+def print_hi() -> None:
     # Use a breakpoint in the code line below to debug your script.
     #print(f'Hi, {name}')  # Press Ctrl+F8 to toggle the breakpoint.
     """
@@ -31,26 +51,26 @@ def print_hi(name):
     """
     session = Session()
     run = True
-    while(run):
+    while run:
         print("Menu\n"
               "1. Show currencies\n"
               "2. Log in\n"
-              "3. Create account\n"
+              "3. Create Account\n"
               "4. Stop\n")
         choose = int(input("Type numer from menu: "))
 
-        if(choose == 4):
+        if choose == 4:
             run = False
-        elif (choose == 3):
+        elif choose == 3:
             session.createAccountInterface()
-        elif (choose == 2):
+        elif choose == 2:
 
             # sesja.show()
             # result = db.wallets.insert_one({"currency": "złoty", "founds": 17})
             # sesja.createAccountInterface()
-            A = session.logInInterface()
-            A.addMoneyInterface()
-        elif (choose == 1):
+            account = session.logInInterface()
+            user(account)
+        elif choose == 1:
             pass
         else:
             print("Try to choose one more time")
@@ -92,6 +112,6 @@ def print_hi(name):
 
 # Press the green button in the gutter to run the script.
 if __name__ == '__main__':
-    print_hi('PyCharm')
+    print_hi()
 
 # See PyCharm help at https://www.jetbrains.com/help/pycharm/

@@ -3,9 +3,10 @@ from abc import ABC, abstractmethod
 
 class FinancialInterface(ABC):
     @abstractmethod
-    def display_History(self):
+    def BalanceInterface(self):
         pass
-
+    """
     @abstractmethod
     def show(self):
         pass
+    """

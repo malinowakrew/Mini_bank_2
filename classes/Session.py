@@ -133,8 +133,11 @@ class Session(LogInterface, CreateAccountInterface, FinancialInterface):
         password = input("Password: ")
 
         try:
-            Account = self.logIn(nick, password)
-            print(f"Welcom {Account.user.name}")
-            return Account
+            account = self.logIn(nick, password)
+            print(f"Welcome {account.user.name}")
+            return account
         except Exception as error:
             print(error)
+
+    def BalanceInterface(self):
+        pass

@@ -3,17 +3,23 @@ from abc import ABC, abstractmethod
 
 class TransactionInterface(ABC):
     @abstractmethod
-    def transfer(self):
+    def transferInterface(self):
         pass
 
     @abstractmethod
     def deposit(self):
         pass
 
+    """
     @abstractmethod
     def show(self):
         pass
+    """
 
     @abstractmethod
     def addMoneyInterface(self):
+        pass
+
+    @abstractmethod
+    def payInterface(self):
         pass
