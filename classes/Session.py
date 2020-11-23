@@ -1,5 +1,6 @@
 from datetime import datetime
 
+from classes.Account import *
 from interfaces.logInterface import *
 from interfaces.createAccountInterface import *
 from interfaces.financialInterface import *
@@ -38,9 +39,6 @@ class Session(LogInterface, CreateAccountInterface, FinancialInterface):
     def display_History(self):
         pass
 
-    def show(self):
-        for currency in self.currencies:
-            print(currency.getCurrency()["name"])
 
     def displayCurrencies(self):
         list = []
@@ -78,6 +76,7 @@ class Session(LogInterface, CreateAccountInterface, FinancialInterface):
     def calculateBalance(self, defaultCurrencyName):
         #efaultCurrencyValue = db.currencies.find_one({"name": defaultCurrencyName})
         values = {}
+        defaultCurrencyValue = None
         for currency in self.currencies:
             if currency.name == defaultCurrencyName:
                 defaultCurrencyValue = currency
@@ -98,6 +97,11 @@ class Session(LogInterface, CreateAccountInterface, FinancialInterface):
         else:
             raise LogError
 
+    def calculateAmountOfMoney(self, currencyValues, money):
+        moneyDict = dict()
+        for value in currencyValues:
+            moneyDict[value] = currencyValues[value] * money
+        return moneyDict
 
     def getCurrencies(self):
         return self.currencies
@@ -105,7 +109,12 @@ class Session(LogInterface, CreateAccountInterface, FinancialInterface):
     def findCurrency(self):
         pass
 
+
     #Interfaces
+    def showInterface(self):
+        for number, currency in enumerate(self.currencies):
+            print(f"{number}. {currency.getCurrency()['name']}")
+
     def createAccountInterface(self):
         print(f"Creating account")
         nick = input("Nick: ")
@@ -139,5 +148,67 @@ class Session(LogInterface, CreateAccountInterface, FinancialInterface):
         except Exception as error:
             print(error)
 
-    def BalanceInterface(self):
-        pass
+    def BalanceInterface(self, account=None):
+        self.showInterface()
+
+        chooseCurrency = input("Choose default currency: ")
+        dictCurrencies: dict = self.calculateBalance(chooseCurrency)
+
+        for currency in dictCurrencies:
+            print(f"{currency}: {dictCurrencies[currency]}")
+
+        if account != None:
+            choose = input("Type 'YES' if you want to calculate money")
+            if choose == "YES":
+                money = float(input("Money to exchange in default currency which you choose before: "))
+                moneyDict = self.calculateAmountOfMoney(dictCurrencies, money)
+
+                print(f"Exchanging {money} {chooseCurrency} you can get: ")
+                for value in moneyDict:
+                    print(f"{moneyDict[value]} {value}")
+
+
+
+    def depositSessionInterface(self, account: Account):
+        walletsList = account.displayWallets()
+
+        for wallet in walletsList:
+            print(f"{wallet[0]}: {wallet[1]}")
+
+        choose = 'NEW'
+        if (len(walletsList) >= 2):
+            choose = input("Type 'NEW' if you want to create new wallet or type 'OLD' if you want use existing wallet")
+        else:
+            print("You have to make more wallets to exchange money")
+
+        if choose == "NEW":
+            self.showInterface()
+
+            newCurrency = input("Choose new currency: ")
+            for currency in self.currencies:
+                if currency.name == newCurrency:
+                    more = currency
+
+            account.addWallet(more)
+            choose = 'OLD'
+
+        if choose == "OLD":
+            less = input("Transfer money FROM: ")
+            more = input("TO: ")
+            money = float(input("Money: "))
+
+            for currency in self.currencies:
+                if currency.name == less:
+                    lessCurrencyClass = currency
+                if currency.name == more:
+                    moreCurrencyClass = currency
+
+            dictCurrencies: dict = self.calculateBalance(less)
+
+            currencyDict = self.calculateAmountOfMoney(dictCurrencies, money)
+
+            print(currencyDict[more])
+            transferMoney = float(currencyDict[more])
+            account.deposit(transferMoney, more, less, money)
+        else:
+            raise ValueError

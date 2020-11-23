@@ -21,11 +21,8 @@ class Wallet():
         return self.funds
 
     def changeFounds(self, founds):
-        walletData = db.wallets.find_one({"currency": str(self.currency)})
-        id = walletData['_id']
         results = db.wallets.update({'_id': self.walletID}, {"$inc": {'founds': founds}})
-
-        return walletData
+        return results
 
     def pay(self, foundsToPay):
         walletData = db.wallets.find_one({"_id": self.walletID})

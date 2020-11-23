@@ -7,7 +7,8 @@ from classes.Account import *
 from classes.Session import *
 from datetime import datetime
 
-def user(account: Account) -> None:
+def user (account: Account,
+         session: Session) -> None:
     run = True
     while run:
         print("Menu\n"
@@ -15,17 +16,23 @@ def user(account: Account) -> None:
               "2. Account balance\n"
               "3. Pay\n"
               "4. Add money\n"
-              "5. Log out\n")
+              "5. Log out\n"
+              "6. Exchange money\n")
         choose = int(input("Type numer from menu: "))
 
         if choose == 5:
             run = False
         elif choose == 4:
             account.addMoneyInterface()
-        elif choose == 2:
-            pass
         elif choose == 3:
             account.payInterface()
+        elif choose == 2:
+            account.BalanceInterface()
+        elif choose == 1:
+            session.BalanceInterface(account)
+        elif choose == 6:
+            session.depositSessionInterface(account)
+
 
 def print_hi() -> None:
     # Use a breakpoint in the code line below to debug your script.
@@ -64,14 +71,10 @@ def print_hi() -> None:
         elif choose == 3:
             session.createAccountInterface()
         elif choose == 2:
-
-            # sesja.show()
-            # result = db.wallets.insert_one({"currency": "złoty", "founds": 17})
-            # sesja.createAccountInterface()
             account = session.logInInterface()
-            user(account)
+            user(account, session)
         elif choose == 1:
-            pass
+            session.BalanceInterface()
         else:
             print("Try to choose one more time")
     """
