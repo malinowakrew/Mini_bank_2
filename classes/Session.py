@@ -4,6 +4,7 @@ from classes.Account import *
 from interfaces.logInterface import *
 from interfaces.createAccountInterface import *
 from interfaces.financialInterface import *
+from interfaces.depositInterface import *
 
 from db import db
 from classes.Currency import Currency
@@ -23,7 +24,7 @@ class AccountAlreadyExist(Error):
 
 #Klasa
 
-class Session(LogInterface, CreateAccountInterface, FinancialInterface):
+class Session(LogInterface, CreateAccountInterface, FinancialInterface, DepositSessionInterface):
     def __init__(self) -> None:
         self.date = datetime.now()
         self.currencies = self.currenciesInit()
@@ -176,7 +177,7 @@ class Session(LogInterface, CreateAccountInterface, FinancialInterface):
             print(f"{wallet[0]}: {wallet[1]}")
 
         choose = 'NEW'
-        if (len(walletsList) >= 2):
+        if len(walletsList) >= 2:
             choose = input("Type 'NEW' if you want to create new wallet or type 'OLD' if you want use existing wallet")
         else:
             print("You have to make more wallets to exchange money")
@@ -188,8 +189,12 @@ class Session(LogInterface, CreateAccountInterface, FinancialInterface):
             for currency in self.currencies:
                 if currency.name == newCurrency:
                     more = currency
+            try:
+                account.addWallet(more)
+                print(f"Wallet {more} was created")
+            except Exception as error:
+                print(error)
 
-            account.addWallet(more)
             choose = 'OLD'
 
         if choose == "OLD":

@@ -54,13 +54,9 @@ class Account(TransactionInterface, FinancialInterface, ShowInterface):
     def deposit(self, transferMoney, more, less, money):
         for wallet in self.wallets:
             if wallet.currency == more:
-                print("More")
-                print(wallet.currency)
                 wallet.changeFounds(transferMoney)
-                print("PO WYMIANIE")
+
             if wallet.currency == less:
-                print("LESS")
-                print(wallet.currency)
                 wallet.changeFounds(-money)
 
         self.wallets = self.walletsInit()

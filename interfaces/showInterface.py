@@ -1,6 +1,6 @@
 from abc import ABC, abstractmethod
 
-class ShowInterface:
+class ShowInterface(ABC):
     @abstractmethod
     def showInterface(self):
         pass
