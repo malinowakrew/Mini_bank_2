@@ -9,16 +9,6 @@ class TransactionInterface(ABC):
         pass
 
     @abstractmethod
-    def depositInterface(self, session):
-        pass
-
-    """
-    @abstractmethod
-    def show(self):
-        pass
-    """
-
-    @abstractmethod
     def addMoneyInterface(self):
         pass
 

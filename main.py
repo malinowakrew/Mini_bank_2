@@ -6,9 +6,31 @@ from classes.Wallet import *
 from classes.Account import *
 from classes.Session import *
 from datetime import datetime
+from classes.Oversee import *
 
 def user (account: Account,
          session: Session) -> None:
+
+    if type(account) == Oversee:
+        chose = input("You want to use yout administrator account?")
+        if chose == "YES":
+            run = True
+            print("Administartor Account")
+        else:
+            run = False
+            print("Normaln user Account")
+        while run:
+            account.showUsersInterface()
+            chose = input("You want to check something else?")
+
+            if(chose != "YES"):
+                chose = input("You want to use your private account?")
+                if chose == "YES":
+                    run = False
+                    print("Normal user Account")
+                else:
+                    return 0
+
     run = True
     while run:
         print("Menu\n"
@@ -33,8 +55,9 @@ def user (account: Account,
         elif choose == 6:
             session.depositSessionInterface(account)
 
+    return 0
 
-def print_hi() -> None:
+def main() -> None:
     # Use a breakpoint in the code line below to debug your script.
     #print(f'Hi, {name}')  # Press Ctrl+F8 to toggle the breakpoint.
     """
@@ -64,6 +87,7 @@ def print_hi() -> None:
               "2. Log in\n"
               "3. Create Account\n"
               "4. Stop\n")
+
         choose = int(input("Type numer from menu: "))
 
         if choose == 4:
@@ -72,49 +96,13 @@ def print_hi() -> None:
             session.createAccountInterface()
         elif choose == 2:
             account = session.logInInterface()
-            user(account, session)
+            ret = user(account, session)
         elif choose == 1:
             session.BalanceInterface()
         else:
             print("Try to choose one more time")
-    """
-    A = sesja.logIn("EdytaMroz", "123")
-    for wallet in A.wallets:
-        print(wallet.getFounds())
-    #print(lambda wall: )
-    dic = sesja.calculateBalance("złoty")
 
-    A.show()
-
-    for i in dic:
-        print(f"Za 1 {'złoty'} możesz otrzymać {dic[i]} {i}")
-
-    lista_c = sesja.getCurrencies()
-
-    A.addMoney(78)
-    for c in lista_c:
-        if c.name == "frank":
-            A.addWallet(c)
-            A.transfer(7, c)
-    print("Przed")
-    A.show()
-
-    print("Po")
-    A.pay(2, "frank")
-    A.show()
-    
-    print("main")
-    print(A.mainWallet.getFounds())
-    A.addMoney(89.0)
-    A.show()
-    
-    konto = Account("lol")
-    for wal in konto.wallets:
-        print(wal.getFounds())
-    """
-
-# Press the green button in the gutter to run the script.
 if __name__ == '__main__':
-    print_hi()
+    main()
 
 # See PyCharm help at https://www.jetbrains.com/help/pycharm/

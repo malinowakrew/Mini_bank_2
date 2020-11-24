@@ -9,6 +9,7 @@ from interfaces.depositInterface import *
 from db import db
 from classes.Currency import Currency
 from classes.Account import Account
+from classes.Oversee import Oversee
 
 from errors import Error
 
@@ -36,9 +37,6 @@ class Session(LogInterface, CreateAccountInterface, FinancialInterface, DepositS
             currencies.append(Currency(currencyDB.get('name'), currencyDB.get('rate'), currencyDB.get('_id')))
 
         return currencies
-
-    def display_History(self):
-        pass
 
 
     def displayCurrencies(self):
@@ -93,6 +91,8 @@ class Session(LogInterface, CreateAccountInterface, FinancialInterface, DepositS
     def logIn(self, nick, password):
         accountDB = db.accounts.find_one({"nick": nick})
 
+        if accountDB['administrator'] != None:
+            return Oversee(accountDB['_id'])
         if accountDB['password'] == password:
             return Account(accountDB['_id'])
         else:
@@ -201,12 +201,6 @@ class Session(LogInterface, CreateAccountInterface, FinancialInterface, DepositS
             less = input("Transfer money FROM: ")
             more = input("TO: ")
             money = float(input("Money: "))
-
-            for currency in self.currencies:
-                if currency.name == less:
-                    lessCurrencyClass = currency
-                if currency.name == more:
-                    moreCurrencyClass = currency
 
             dictCurrencies: dict = self.calculateBalance(less)
 

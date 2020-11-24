@@ -77,11 +77,6 @@ class Account(TransactionInterface, FinancialInterface, ShowInterface):
 
         self.wallets = self.walletsInit()
 
-    def createWallets(self):
-        pass
-
-    def checkMainWallet(self):
-        pass
 
     # Interfaces
 
@@ -141,5 +136,4 @@ class Account(TransactionInterface, FinancialInterface, ShowInterface):
 
         print("\n")
 
-    def depositInterface(self, currencyDict):
-        pass
+
