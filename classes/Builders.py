@@ -42,6 +42,15 @@ class BuildOverseeAccount(buildInterface):
         return User(userDB["name"], userDB["surname"], userDB["_id"])
 
     def buildWallets(self, accountID):
+        pass
+
+    def buildMainWallet(self, accountID):
+        pass
+
+    def reset(self):
+        pass
+    """
+    def buildWallets(self, accountID):
         wallets = []
         accountDB = db.accounts.find_one({"_id": accountID})
         for walletDB in accountDB["wallets"]:
@@ -60,6 +69,7 @@ class BuildOverseeAccount(buildInterface):
 
     def reset(self):
         pass
+    """
 
 class Director:
     def __init__(self) -> None:
@@ -83,10 +93,10 @@ class Director:
 
     def makeOversee(self, ID):
         user = self._builder.buildUser(ID)
-        wallets = self._builder.buildWallets(ID)
-        mainWallet = self._builder.buildMainWallet(ID)
+        #wallets = self._builder.buildWallets(ID)
+        #mainWallet = self._builder.buildMainWallet(ID)
 
-        account: Oversee = Oversee(ID, user, wallets, mainWallet)
+        account: Oversee = Oversee(ID, user)
         return account
 
 

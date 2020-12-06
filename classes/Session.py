@@ -94,12 +94,15 @@ class Session(LogInterface, CreateAccountInterface, FinancialInterface, DepositS
         director = Director()
 
         if accountDB['administrator'] != None:
-            print("admin")
-            if accountDB['password'] == password:
-                builder = BuildOverseeAccount()
-                director.builder = builder
+            chose = input("Do you want to use admin account?")
+            if chose == "YES":
+                print("Admin")
+                if accountDB['password'] == password:
+                    builder = BuildOverseeAccount()
+                    director.builder = builder
 
-                return director.makeOversee(accountDB['_id'])
+                    return director.makeOversee(accountDB['_id'])
+
         if accountDB['password'] == password:
             print("Normal user")
 

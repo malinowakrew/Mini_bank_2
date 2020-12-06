@@ -7,14 +7,16 @@ from bson.objectid import ObjectId
 from interfaces.oversee import OverseeInterface
 #from classes.Builders import *
 
-class Oversee(OverseeInterface, Account):
+class Oversee(OverseeInterface): #Account):
     """
     def __init__(self, ID)->None:
         super().__init__(ID)
         pass
     """
-    def __init__(self, ID, user, wallets, mainWallet)-> None:
-        super().__init__(ID, user, wallets, mainWallet)
+    def __init__(self, ID, user)-> None:
+        #super().__init__(ID, user, wallets, mainWallet)
+        self.accountID = ObjectId(ID)
+        self.user = user
 
 
     def userData(self):
@@ -29,7 +31,7 @@ class Oversee(OverseeInterface, Account):
     def userWallets(self, user: User):
         accountDB = db.accounts.find_one({"user": {'ref': 'user', 'id': ObjectId(user.userID), 'db': 'users'}})
         print(f"\nNick: {accountDB['nick']}")
-
+        """
         director = Director()
         builder = BuildOverseeAccount()
         director.builder = builder
@@ -37,6 +39,7 @@ class Oversee(OverseeInterface, Account):
         userAccount = director.makeOversee(accountDB['_id'])
 
         userAccount.showInterface()
+        """
 
     #Interfaces
     def showUsersInterface(self):

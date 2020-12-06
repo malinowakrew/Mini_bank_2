@@ -8,27 +8,9 @@ from classes.Session import *
 from datetime import datetime
 from classes.Oversee import *
 
-def user (account: Account,
+def user (account,
          session: Session) -> None:
-    if type(account) == Oversee:
-        chose = input("You want to use yout administrator account?")
-        if chose == "YES":
-            run = True
-            print("Administartor Account")
-        else:
-            run = False
-            print("Normaln user Account")
-        while run:
-            account.showUsersInterface()
-            chose = input("You want to check something else?")
 
-            if (chose != "YES"):
-                chose = input("You want to use your private account?")
-                if chose == "YES":
-                    run = False
-                    print("Normal user Account")
-                else:
-                    return 0
     run = True
     while run:
         print("Menu\n"
@@ -55,17 +37,23 @@ def user (account: Account,
 
     return 0
 
-def oversee(account: Oversee):
+
+def oversee(account, session):
     run = True
     while run:
         account.showUsersInterface()
         chose = input("You want to check something else?")
 
         if (chose != "YES"):
+            #czy ja tego potrzebuję?
             chose = input("You want to use your private account?")
             if chose == "YES":
                 run = False
-                print("Normal user Account")
+                print("Log into your normal account")
+                account = session.logInInterface()
+                if account == None:
+                    raise LogError
+                user(account, session)
             else:
                 return 0
 
@@ -111,7 +99,10 @@ def main() -> None:
             account = session.logInInterface()
             if account == None:
                 raise LogError
-            user(account, session)
+            if type(account) == Oversee:
+                oversee(account, session)
+            else:
+                user(account, session)
 
         elif choose == 1:
             session.BalanceInterface()
