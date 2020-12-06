@@ -15,19 +15,21 @@ from bson.objectid import ObjectId
 
 
 class Account(TransactionInterface, FinancialInterface, ShowInterface):
-    def __init__(self, ID) -> None:
+    def __init__(self, ID, user, wallets, mainWallet) -> None:
         self.accountID = ObjectId(ID)
-        self.wallets = self.walletsInit()
-        self.mainWallet = self.mainWalletInit()
-        self.user = self.userInit()
+        self.wallets = wallets
+        self.mainWallet = mainWallet
+        self.user = user
 
+    """
     def userInit(self):
         accountDB = db.accounts.find_one({'_id': self.accountID})
 
         userDB = db.users.find_one({"_id": (accountDB['user'])['id']})
         return User(userDB["name"], userDB["surname"], userDB["_id"])
+    """
 
-    def walletsInit(self):
+    def walletsUpdate(self):
         wallets = []
         accountDB = db.accounts.find_one({"_id": self.accountID})
         for walletDB in accountDB["wallets"]:
@@ -37,12 +39,15 @@ class Account(TransactionInterface, FinancialInterface, ShowInterface):
             wallets.append(Wallet(wallet['founds'], currencyName['name'], wallet['_id']))
         return wallets
 
+    """
     def mainWalletInit(self):
         accountDB = db.accounts.find_one({"_id": self.accountID})
         walletDB = accountDB['wallets'][0]
         wallet = db.wallets.find_one({"_id": walletDB['id']})
         currencyName = db.currencies.find_one({'_id': (wallet['currency'])['id']})
         return (Wallet(wallet['founds'], currencyName['name'], wallet['_id']))
+
+    """
 
     def transfer(self, money, currency):
         if self.mainWallet.funds >= money:
@@ -59,7 +64,7 @@ class Account(TransactionInterface, FinancialInterface, ShowInterface):
             if wallet.currency == less:
                 wallet.changeFounds(-money)
 
-        self.wallets = self.walletsInit()
+        self.wallets = self.walletsUpdate()
 
     def displayWallets(self):
         list = []
@@ -75,7 +80,7 @@ class Account(TransactionInterface, FinancialInterface, ShowInterface):
         result = db.accounts.update({'_id': self.accountID}, {"$push": {"wallets": {'id': result.inserted_id,
                                                                                     'db': "wallets"}}})
 
-        self.wallets = self.walletsInit()
+        self.wallets = self.walletsUpdate()
 
 
     # Interfaces
@@ -86,14 +91,13 @@ class Account(TransactionInterface, FinancialInterface, ShowInterface):
 
         try:
             self.mainWallet.changeFounds(money)
-            self.wallets = self.walletsInit()
+            self.wallets = self.walletsUpdate()
             print("Added")
             self.showInterface()
         except Exception as error:
             print(error)
 
     def payInterface(self):
-        print("Pay for what you want")
         print("Pay for what you want")
         currencyToChoose = self.displayWallets()
 
@@ -113,7 +117,7 @@ class Account(TransactionInterface, FinancialInterface, ShowInterface):
                 except Exception as error:
                     print(error)
 
-        self.wallets = self.walletsInit()
+        self.wallets = self.walletsUpdate()
 
         self.showInterface()
 

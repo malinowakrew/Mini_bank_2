@@ -5,11 +5,17 @@ from classes.User import User
 from bson.objectid import ObjectId
 
 from interfaces.oversee import OverseeInterface
+#from classes.Builders import *
 
-class Oversee(Account, OverseeInterface):
+class Oversee(OverseeInterface, Account):
+    """
     def __init__(self, ID)->None:
         super().__init__(ID)
         pass
+    """
+    def __init__(self, ID, user, wallets, mainWallet)-> None:
+        super().__init__(ID, user, wallets, mainWallet)
+
 
     def userData(self):
         users = []
@@ -24,7 +30,11 @@ class Oversee(Account, OverseeInterface):
         accountDB = db.accounts.find_one({"user": {'ref': 'user', 'id': ObjectId(user.userID), 'db': 'users'}})
         print(f"\nNick: {accountDB['nick']}")
 
-        userAccount = Account(accountDB['_id'])
+        director = Director()
+        builder = BuildOverseeAccount()
+        director.builder = builder
+
+        userAccount = director.makeOversee(accountDB['_id'])
 
         userAccount.showInterface()
 
@@ -41,6 +51,7 @@ class Oversee(Account, OverseeInterface):
 
         self.userWallets(chosenUser)
 
+"""
 def main():
     oversee = Oversee()
     oversee.showUsersInterface()
@@ -48,3 +59,5 @@ def main():
 
 if __name__ == "__main__":
     main()
+    
+"""

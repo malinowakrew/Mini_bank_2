@@ -10,6 +10,7 @@ from db import db
 from classes.Currency import Currency
 from classes.Account import Account
 from classes.Oversee import Oversee
+from classes.Builders import *
 
 from errors import Error
 
@@ -90,11 +91,22 @@ class Session(LogInterface, CreateAccountInterface, FinancialInterface, DepositS
 
     def logIn(self, nick, password):
         accountDB = db.accounts.find_one({"nick": nick})
+        director = Director()
 
         if accountDB['administrator'] != None:
-            return Oversee(accountDB['_id'])
+            print("admin")
+            if accountDB['password'] == password:
+                builder = BuildOverseeAccount()
+                director.builder = builder
+
+                return director.makeOversee(accountDB['_id'])
         if accountDB['password'] == password:
-            return Account(accountDB['_id'])
+            print("Normal user")
+
+            builder = BuildNormalAccount()
+            director.builder = builder
+
+            return director.makeAccount(ObjectId(accountDB['_id']))
         else:
             raise LogError
 

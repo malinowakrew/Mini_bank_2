@@ -10,7 +10,6 @@ from classes.Oversee import *
 
 def user (account: Account,
          session: Session) -> None:
-
     if type(account) == Oversee:
         chose = input("You want to use yout administrator account?")
         if chose == "YES":
@@ -23,14 +22,13 @@ def user (account: Account,
             account.showUsersInterface()
             chose = input("You want to check something else?")
 
-            if(chose != "YES"):
+            if (chose != "YES"):
                 chose = input("You want to use your private account?")
                 if chose == "YES":
                     run = False
                     print("Normal user Account")
                 else:
                     return 0
-
     run = True
     while run:
         print("Menu\n"
@@ -56,6 +54,20 @@ def user (account: Account,
             session.depositSessionInterface(account)
 
     return 0
+
+def oversee(account: Oversee):
+    run = True
+    while run:
+        account.showUsersInterface()
+        chose = input("You want to check something else?")
+
+        if (chose != "YES"):
+            chose = input("You want to use your private account?")
+            if chose == "YES":
+                run = False
+                print("Normal user Account")
+            else:
+                return 0
 
 def main() -> None:
     # Use a breakpoint in the code line below to debug your script.
@@ -95,8 +107,12 @@ def main() -> None:
         elif choose == 3:
             session.createAccountInterface()
         elif choose == 2:
+            run = False
             account = session.logInInterface()
-            ret = user(account, session)
+            if account == None:
+                raise LogError
+            user(account, session)
+
         elif choose == 1:
             session.BalanceInterface()
         else:
