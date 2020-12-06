@@ -1,10 +1,10 @@
 from datetime import datetime
 
 from classes.Account import *
-from interfaces.logInterface import *
 from interfaces.createAccountInterface import *
 from interfaces.financialInterface import *
 from interfaces.depositInterface import *
+from interfaces.sessionInterface import *
 
 from db import db
 from classes.Currency import Currency
@@ -26,7 +26,7 @@ class AccountAlreadyExist(Error):
 
 #Klasa
 
-class Session(LogInterface, CreateAccountInterface, FinancialInterface, DepositSessionInterface):
+class Session(sessionInterface):#LogInterface, CreateAccountInterface, FinancialInterface, DepositSessionInterface):
     def __init__(self) -> None:
         self.date = datetime.now()
         self.currencies = self.currenciesInit()
@@ -126,9 +126,13 @@ class Session(LogInterface, CreateAccountInterface, FinancialInterface, DepositS
         pass
 
 
+class SessionClient(AccountInterface, FinancialInterface, DepositSessionInterface):
+    def __init__(self, session):
+        self.session = session
+
     #Interfaces
     def showInterface(self):
-        for number, currency in enumerate(self.currencies):
+        for number, currency in enumerate(self.session.currencies):
             print(f"{number}. {currency.getCurrency()['name']}")
 
     def createAccountInterface(self):
@@ -139,16 +143,16 @@ class Session(LogInterface, CreateAccountInterface, FinancialInterface, DepositS
         surname = input("Surname: ")
         print("Currency: ")
 
-        for number, currency in enumerate(self.displayCurrencies()):
+        for number, currency in enumerate(self.session.displayCurrencies()):
             print(f"{number+1}. {currency}")
 
         currencyChoose = input("Type number of choosed currency: ")
-        currency = self.displayCurrencies()
+        currency = self.session.displayCurrencies()
         type(currency)
         currency = currency[int(currencyChoose)-1]
 
         try:
-            self.createAccount(nick, password, name, surname, currency)
+            self.session.createAccount(nick, password, name, surname, currency)
         except Exception as error:
             print(error)
 
@@ -158,7 +162,7 @@ class Session(LogInterface, CreateAccountInterface, FinancialInterface, DepositS
         password = input("Password: ")
 
         try:
-            account = self.logIn(nick, password)
+            account = self.session.logIn(nick, password)
             print(f"Welcome {account.user.name}")
             return account
         except Exception as error:
@@ -168,7 +172,7 @@ class Session(LogInterface, CreateAccountInterface, FinancialInterface, DepositS
         self.showInterface()
 
         chooseCurrency = input("Choose default currency: ")
-        dictCurrencies: dict = self.calculateBalance(chooseCurrency)
+        dictCurrencies: dict = self.session.calculateBalance(chooseCurrency)
 
         for currency in dictCurrencies:
             print(f"{currency}: {dictCurrencies[currency]}")
@@ -177,7 +181,7 @@ class Session(LogInterface, CreateAccountInterface, FinancialInterface, DepositS
             choose = input("Type 'YES' if you want to calculate money")
             if choose == "YES":
                 money = float(input("Money to exchange in default currency which you choose before: "))
-                moneyDict = self.calculateAmountOfMoney(dictCurrencies, money)
+                moneyDict = self.session.calculateAmountOfMoney(dictCurrencies, money)
 
                 print(f"Exchanging {money} {chooseCurrency} you can get: ")
                 for value in moneyDict:
@@ -201,7 +205,7 @@ class Session(LogInterface, CreateAccountInterface, FinancialInterface, DepositS
             self.showInterface()
 
             newCurrency = input("Choose new currency: ")
-            for currency in self.currencies:
+            for currency in self.session.currencies:
                 if currency.name == newCurrency:
                     more = currency
             try:
@@ -217,9 +221,9 @@ class Session(LogInterface, CreateAccountInterface, FinancialInterface, DepositS
             more = input("TO: ")
             money = float(input("Money: "))
 
-            dictCurrencies: dict = self.calculateBalance(less)
+            dictCurrencies: dict = self.session.calculateBalance(less)
 
-            currencyDict = self.calculateAmountOfMoney(dictCurrencies, money)
+            currencyDict = self.session.calculateAmountOfMoney(dictCurrencies, money)
 
             print(currencyDict[more])
             transferMoney = float(currencyDict[more])

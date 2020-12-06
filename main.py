@@ -79,7 +79,8 @@ def main() -> None:
                                        "date": datetime.now()})
 
     """
-    session = Session()
+    implementacja = Session()
+    session = SessionClient(implementacja)
     run = True
     while run:
         print("Menu\n"
