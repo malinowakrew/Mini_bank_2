@@ -119,11 +119,7 @@ class Session(sessionInterface):#LogInterface, CreateAccountInterface, Financial
             moneyDict[value] = currencyValues[value] * money
         return moneyDict
 
-    def getCurrencies(self):
-        return self.currencies
 
-    def findCurrency(self):
-        pass
 
 
 class SessionClient(AccountInterface, FinancialInterface, DepositSessionInterface):

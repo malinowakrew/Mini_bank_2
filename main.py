@@ -5,11 +5,10 @@
 from classes.Wallet import *
 from classes.Account import *
 from classes.Session import *
-from datetime import datetime
 from classes.Oversee import *
 
 def user (account,
-         session: Session) -> None:
+         session: SessionClient) -> None:
 
     run = True
     while run:
