@@ -30,7 +30,7 @@ class ChangeManager:
                 listener.addAccount(account)
                 return 0
 
-        self.currencyListenerList.append(CurrencyListener(change))
+        self.currencyListenerList.append(CurrencyListener(change, [account]))
         account_id = db.accounts.find({"_id": account.accountID})[0]
         print(type(account_id["_id"]))
         manager = db.changeManager.insert_one({"rate": float(change), "listenersList": [account_id["_id"]]})
