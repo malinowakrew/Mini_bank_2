@@ -97,6 +97,7 @@ def main() -> None:
         elif choose == 2:
             run = False
             account = session.logInInterface()
+
             if account == None:
                 raise LogError
             if type(account) == Oversee:
