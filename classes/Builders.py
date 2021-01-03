@@ -31,6 +31,11 @@ class BuildNormalAccount(buildInterface):
         currencyName = db.currencies.find_one({'_id': (wallet['currency'])['id']})
         return (Wallet(wallet['founds'], currencyName['name'], wallet['_id']))
 
+    def buildMessages(self, accountID):
+        accountDB = db.accounts.find_one({"_id": accountID})
+        messagesDB = accountDB['messages']
+        return messagesDB
+
     def reset(self):
         pass
 
@@ -87,8 +92,9 @@ class Director:
         user = self._builder.buildUser(ID)
         wallets = self._builder.buildWallets(ID)
         mainWallet = self._builder.buildMainWallet(ID)
+        messages = self._builder.buildMessages(ID)
 
-        account: Account = Account(ID, user, wallets, mainWallet)
+        account: Account = Account(ID, user, wallets, mainWallet, messages)
         return account
 
     def makeOversee(self, ID):

@@ -7,19 +7,20 @@ from interfaces.showInterface import *
 
 from db import db
 from classes.Wallet import Wallet
-from classes.User import User
-from classes.Currency import Currency
+#from classes.User import User
+#from classes.Currency import Currency
 #from classes.Session import Session
 
 from bson.objectid import ObjectId
 
 
 class Account(TransactionInterface, FinancialInterface, ShowInterface):
-    def __init__(self, ID, user, wallets, mainWallet) -> None:
+    def __init__(self, ID, user, wallets, mainWallet, messages) -> None:
         self.accountID = ObjectId(ID)
         self.wallets = wallets
         self.mainWallet = mainWallet
         self.user = user
+        self.messages = messages
 
     """
     def userInit(self):
@@ -82,6 +83,12 @@ class Account(TransactionInterface, FinancialInterface, ShowInterface):
 
         self.wallets = self.walletsUpdate()
 
+    def showMessages(self):
+        for message in self.messages:
+            print(message)
+
+    def addMessage(self, newMessage):
+        self.messages.append(newMessage)
 
     # Interfaces
 
@@ -139,5 +146,7 @@ class Account(TransactionInterface, FinancialInterface, ShowInterface):
             print(f"{key}: {userData[key]}")
 
         print("\n")
+
+
 
 

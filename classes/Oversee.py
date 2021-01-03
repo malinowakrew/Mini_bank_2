@@ -6,6 +6,7 @@ from bson.objectid import ObjectId
 
 from interfaces.oversee import OverseeInterface
 #from classes.Builders import *
+from classes.Currency import Currency
 
 class Oversee(OverseeInterface): #Account):
     """
@@ -53,6 +54,13 @@ class Oversee(OverseeInterface): #Account):
         chosenUser = userList[chose-1]
 
         self.userWallets(chosenUser)
+
+    def changeCurrencyRate(self):
+        currencyName = input("Currency name: ")
+        currencyDB = db.currencies.find({"name": currencyName})[0]
+        currency = Currency(currencyDB.get('name'), currencyDB.get('rate'), currencyDB.get('_id'))
+        change = input("How much: ")
+        currency.changeRate(change)
 
 """
 def main():

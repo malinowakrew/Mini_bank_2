@@ -1,15 +1,14 @@
 from datetime import datetime
 
-from classes.Account import *
+#from classes.Account import *
 from interfaces.createAccountInterface import *
 from interfaces.financialInterface import *
 from interfaces.depositInterface import *
 from interfaces.sessionInterface import *
 
-from db import db
+
 from classes.Currency import Currency
-from classes.Account import Account
-from classes.Oversee import Oversee
+
 from classes.Builders import *
 
 from errors import Error
@@ -26,7 +25,7 @@ class AccountAlreadyExist(Error):
 
 #Klasa
 
-class Session(sessionInterface):#LogInterface, CreateAccountInterface, FinancialInterface, DepositSessionInterface):
+class Session(sessionInterface): #LogInterface, CreateAccountInterface, FinancialInterface, DepositSessionInterface):
     def __init__(self) -> None:
         self.date = datetime.now()
         self.currencies = self.currenciesInit()
@@ -67,7 +66,8 @@ class Session(sessionInterface):#LogInterface, CreateAccountInterface, Financial
                                                              "db": "users"},
                                                     "wallets": [{"id": resultwallet.inserted_id,
                                                                  "db": "wallets",
-                                                                 "special": "mainWallet"}]})
+                                                                 "special": "mainWallet"}],
+                                                    "messages": ["Welcome"]})
 
             return resultAccount.inserted_id
         else:
@@ -92,8 +92,14 @@ class Session(sessionInterface):#LogInterface, CreateAccountInterface, Financial
     def logIn(self, nick, password):
         accountDB = db.accounts.find_one({"nick": nick})
         director = Director()
+        admin = False
+        try:
+            accountDB['administrator']
+            admin = True
+        except Exception as error:
+            pass
 
-        if accountDB['administrator'] != None:
+        if admin:
             chose = input("Do you want to use admin account?")
             if chose == "YES":
                 print("Admin")
@@ -105,12 +111,12 @@ class Session(sessionInterface):#LogInterface, CreateAccountInterface, Financial
 
         if accountDB['password'] == password:
             print("Normal user")
-
             builder = BuildNormalAccount()
             director.builder = builder
 
             return director.makeAccount(ObjectId(accountDB['_id']))
         else:
+            print("Problem")
             raise LogError
 
     def calculateAmountOfMoney(self, currencyValues, money):
@@ -118,7 +124,6 @@ class Session(sessionInterface):#LogInterface, CreateAccountInterface, Financial
         for value in currencyValues:
             moneyDict[value] = currencyValues[value] * money
         return moneyDict
-
 
 
 
@@ -226,3 +231,17 @@ class SessionClient(AccountInterface, FinancialInterface, DepositSessionInterfac
             account.deposit(transferMoney, more, less, money)
         else:
             raise ValueError
+
+    def subscribeCurrency(self, account: Account):
+        for currency in self.session.currencies:
+            print(currency.name)
+
+        decision1 = input("Choose currency to subscribe: ")
+
+        for currency in self.session.currencies:
+            if currency.name == decision1:
+                chosenCurrency: Currency = currency
+
+        decision2 = input("How much it have to change?")
+
+        chosenCurrency.changeManager.addListener(decision2, account, decision1)

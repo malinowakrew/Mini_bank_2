@@ -3,7 +3,7 @@
 # Press Shift+F10 to execute it or replace it with your code.
 # Press Double Shift to search everywhere for classes, files, tool windows, actions, and settings.
 from classes.Wallet import *
-from classes.Account import *
+#from classes.Account import *
 from classes.Session import *
 from classes.Oversee import *
 
@@ -18,7 +18,9 @@ def user (account,
               "3. Pay\n"
               "4. Add money\n"
               "5. Log out\n"
-              "6. Exchange money\n")
+              "6. Exchange money\n"
+              "7. Messages\n"
+              "8. Subscribe currency\n")
         choose = int(input("Type numer from menu: "))
 
         if choose == 5:
@@ -33,6 +35,10 @@ def user (account,
             session.BalanceInterface(account)
         elif choose == 6:
             session.depositSessionInterface(account)
+        elif choose == 7:
+            account.showMessages()
+        elif choose == 8:
+            session.subscribeCurrency(account)
 
     return 0
 
@@ -40,6 +46,10 @@ def user (account,
 def oversee(account, session):
     run = True
     while run:
+        decision = input("Do you want to change currency?")
+        if decision == "YES":
+            account.changeCurrencyRate()
+
         account.showUsersInterface()
         chose = input("You want to check something else?")
 

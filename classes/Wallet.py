@@ -1,7 +1,7 @@
 from db import db
 
 #from errors import NotEnoughFounds
-from classes.Currency import *
+#from classes.Currency import *
 
 class Error(Exception):
     pass
